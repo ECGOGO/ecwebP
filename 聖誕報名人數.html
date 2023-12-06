@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sheets Data</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<table id="sheetData">
+    <!-- Data will be displayed here -->
+</table>
+
+<script>
+    const sheetId = "1mWSQwpKWRASiBlBYoSB5A5PefLzklAlebyuDgyl6WGY";
+    const apiKey = "AIzaSyDn5XMWFsHj22wLmluBiMwaDKpH8f9bHI8";
+    const sheetName = "表單回應 2";
+    const sheetUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheetName}?key=${apiKey}`;
+
+    // Fetch data from Google Sheets
+    fetch(sheetUrl)
+        .then(response => response.json())
+        .then(data => {
+            // Extract headers and rows
+            const [headers, ...rows] = data.values;
+
+            // Create table headers for the selected columns
+            const table = document.getElementById("sheetData");
+            const headerRow = table.insertRow(0);
+
+            // Display only the second and third columns (index 1 and 2)
+            [headers[1], headers[2]].forEach(headerText => {
+                const header = document.createElement("th");
+                header.textContent = headerText;
+                headerRow.appendChild(header);
+            });
+
+            // Populate the table with data for the selected columns
+            rows.forEach(rowData => {
+                const row = table.insertRow(-1);
+                [rowData[1], rowData[2]].forEach(cellData => {
+                    const cell = row.insertCell(-1);
+                    cell.textContent = cellData;
+                });
+            });
+        })
+        .catch(error => {
+            console.error("Error fetching data:", error);
+        });
+</script>
+
+<div class="section-title">晚會共有
+    <label id="labelG2_1"></label>人
+</div>
+
+<div class="section-title">愛宴共有
+    <label id="labelH2_1"></label>人
+</div>
+
+<script>
+    const sheetId1 = "1mWSQwpKWRASiBlBYoSB5A5PefLzklAlebyuDgyl6WGY";
+    const apiKey1 = "AIzaSyDn5XMWFsHj22wLmluBiMwaDKpH8f9bHI8";
+
+    // Fetch data from Google Sheets for 表單回應 1
+    const sheetName1 = "表單回應 1";
+    const sheetUrl1 = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId1}/values/${sheetName1}?key=${apiKey1}`;
+    fetch(sheetUrl1)
+        .then(response => response.json())
+        .then(data1 => {
+            const [headers1, ...rows1] = data1.values;
+
+            // Set G2 and H2 values to labels for 表單回應 1
+            document.getElementById("labelG2_1").textContent = rows1[0][0];
+            document.getElementById("labelH2_1").textContent = rows1[0][1];
+        })
+        .catch(error => {
+            console.error("Error fetching data for 表單回應 1:", error);
+        });
+</script> 
+
+</body>
+</html>
